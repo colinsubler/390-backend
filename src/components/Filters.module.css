@@ -15,7 +15,7 @@
 .filterContainer label {
   font-weight: 600;
   font-size: 1rem;
-  color: #ffffff;
+  color: #131313;
   margin-right: 0.25rem;
 }
 
@@ -23,7 +23,7 @@
 .filterContainer input {
   background-color: #ffffff;
   color: #000000;
-  border: 1px solid #3a3a3a;
+  border: 1px solid #d8d8d8;
   border-radius: 6px;
   padding: 0.4rem 0.75rem;
   font-size: 0.95rem;
