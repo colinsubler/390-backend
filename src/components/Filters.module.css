@@ -1,22 +1,59 @@
-/* Scoped styles for Filters component */
 .filterContainer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 2rem;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem auto;
+  padding: 1rem 1.5rem;
+  background-color: #1f1f1f;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  color: #f5f5f5;
 }
 
 .filterContainer label {
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ffcc00;
+  margin-right: 0.25rem;
 }
 
 .filterContainer select,
 .filterContainer input {
-  height: 2rem;
-  margin: 0.25rem 0.5rem;
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filterContainer select:focus,
+.filterContainer input:focus {
+  border-color: #ffcc00;
+  box-shadow: 0 0 4px #ffcc00;
+  outline: none;
 }
 
 .filterContainer button {
-  padding: 0.25rem 0.75rem;
-  margin-right: 0.5rem;
+  background-color: #ffcc00;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filterContainer button:hover {
+  background-color: #ffaa00;
+  transform: translateY(-2px);
+}
+
+.filterContainer button:active {
+  background-color: #ffcc00;
+  transform: translateY(0);
 }
