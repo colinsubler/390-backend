@@ -33,7 +33,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Navbar />
-        {children}
+        <main>
+          <div className="section">
+            <div className="container">
+              {children}
+            </div>
+          </div>
+        </main>
       </body>
     </html>
   );
