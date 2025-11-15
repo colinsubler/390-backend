@@ -9,20 +9,22 @@ const trimCollapse = (s) =>
     .trim()
     .replace(/\s+/g, " ");
 
-export default function AddProfileForm() {
+const AddProfileForm = ({ initialData = {} }) => {
   const router = useRouter();
   const nameRef = useRef(null);
+  const isEditMode = !!initialData.id;
   const [values, setValues] = useState({
-    name: "",
-    title: "",
-    email: "",
-    bio: "",
+    name: initialData.name || "",
+    title: initialData.title || "",
+    email: initialData.email || "",
+    bio: initialData.bio || "",
     img: null,
+    existingImageUrl: initialData.image_url || "", // Store original image URL
   });
   const [errors, setErrors] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { name, title, email, bio, img } = values;
+  const { name, title, email, bio, img, existingImageUrl } = values;
 
   useEffect(() => {
     if (nameRef.current) {
@@ -57,12 +59,18 @@ export default function AddProfileForm() {
       formData.append("title", stripTags(trimCollapse(title)));
       formData.append("email", stripTags(trimCollapse(email)));
       formData.append("bio", stripTags(bio).trim());
+      
       if (img) {
         formData.append("img", img);
+      } else if (isEditMode && existingImageUrl) {
+        formData.append("image_url", existingImageUrl);
       }
+      
+      const method = isEditMode ? "PUT" : "POST";
+      const url = isEditMode ? `/api/profiles/${initialData.id}` : "/api/profiles";
 
-      const response = await fetch("/api/profiles", {
-        method: "POST",
+      const response = await fetch(url, {
+        method: method,
         body: formData,
       });
 
@@ -71,16 +79,18 @@ export default function AddProfileForm() {
         throw new Error(errorData.error || "Failed to submit form");
       }
 
-      setSuccess("Profile added successfully!");
-      setValues({
-        name: "",
-        title: "",
-        email: "",
-        bio: "",
-        img: null,
-      });
+      setSuccess(isEditMode ? "Profile updated successfully!" : "Profile added successfully!");
+      if (!isEditMode) {
+        setValues({
+          name: "",
+          title: "",
+          email: "",
+          bio: "",
+          img: null,
+          existingImageUrl: "",
+        });
+      }
 
-      // Reset file input
       const fileInput = document.getElementById("img");
       if (fileInput) fileInput.value = "";
 
@@ -139,10 +149,15 @@ export default function AddProfileForm() {
             type="file"
             name="img"
             id="img"
-            required
+            required={!isEditMode}
             accept="image/png, image/jpeg, image/jpg, image/gif"
             onChange={onChange}
           />
+          {isEditMode && existingImageUrl && !img && (
+            <p style={{ fontSize: '0.875rem', color: '#666' }}>
+              Current image will be kept if no new image is uploaded
+            </p>
+          )}
           {errors && <p className={styles.errorMessage}>{errors}</p>}
           <button
             type="submit"
@@ -152,13 +167,15 @@ export default function AddProfileForm() {
               !stripTags(trimCollapse(title)) ||
               !stripTags(trimCollapse(email)) ||
               !stripTags(bio).trim() ||
-              !img
+              (!img && !isEditMode)
             }
           >
-            Add Profile
+            {isEditMode ? "Update Profile" : "Add Profile"}
           </button>
           {success && <p className={styles.successMessage}>{success}</p>}
         </form>
       </div>
   );
 }
+
+export default AddProfileForm;

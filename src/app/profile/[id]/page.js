@@ -1,34 +1,56 @@
+import Link from "next/link";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export const runtime = "nodejs";
+
 async function fetchProfileData(id) {
-  const response = await fetch(
-    `https://web.ics.purdue.edu/~zong6/profile-app/fetch-data-with-id.php?id=${id}`,
-    {
-      next: { revalidate: 60 },
-    }
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch profile data");
+  const profile = await prisma.profiles.findUnique({
+    where: { id: parseInt(id) },
+  });
+  if (!profile) {
+    throw new Error("Profile not found");
   }
-  return response.json();
+  return profile;
+}
+
+export async function generateMetadata({ params }) {
+  const { id } = params;
+  const profileData = await fetchProfileData(id);
+
+  return {
+    title: `${profileData.name} Profile`,
+    description: `View the profile details of ${profileData.name}. ${profileData.bio || ""}`,
+  };
 }
 
 export default async function ProfilePage({ params }) {
-  const { id } = await params;
+  const { id } = params;
   const profileData = await fetchProfileData(id);
 
   return (
     <>
-      <h1>Profile {id}</h1>
-      <div className="bg-white shadow-md rounded-lg p-6">
+      <h1>{`${profileData.name}'s Profile`}</h1>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <img
           src={profileData.image_url}
           alt={`Profile picture of ${profileData.name}`}
-          className="rounded-full w-24 h-24 mb-4"
         />
-        <p className="text-gray-600 mb-2">User ID: {id}</p>
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold">Profile Information</h2>
-          <p className="text-gray-700">Name: {profileData.name}</p>
-          <p className="text-gray-700">Email: {profileData.email}</p>
+
+        <p style={{ marginTop: "3rem" }}>Email: {profileData.email}</p>
+        <p>Bio: {profileData.bio}</p>
+
+        <div style={{ marginTop: "2rem" }}>
+          <Link className="button" href={`/profile/${id}/edit`}>
+            Edit Profile
+          </Link>
         </div>
       </div>
     </>

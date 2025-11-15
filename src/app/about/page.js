@@ -1,3 +1,8 @@
+export const meta={
+    title: "About Me",
+    description: "Learn more about me on this page."
+  };
+
 export default function AboutPage() {
   return (
     <>

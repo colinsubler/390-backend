@@ -207,7 +207,7 @@ li {
 }
 
 /* button*/
-button {
+button, .button {
   background-color: var(--button-background-color);
   color: var(--button-text-color);
   border: none;
@@ -216,7 +216,7 @@ button {
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
 }
-button:hover {
+button:hover, .button:hover {
   background-color: var(--button-hover-background-color);
   color: var(--button-hover-text-color);
 }
@@ -245,7 +245,6 @@ button:hover {
   }
 }
 
-/* Mobile Grid - 1 column */
 @media screen and (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;
@@ -253,7 +252,6 @@ button:hover {
   }
 }
 
-/* Profile Card */
 .profile-card {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
