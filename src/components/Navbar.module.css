@@ -33,3 +33,24 @@
   color: #ffaa00;
   transform: translateY(0);
 }
+
+.navbar ul li a, .signInLink {
+    font-size: 1.125rem;
+    font-weight: 600;
+  color: var(--button-text-color);
+}
+
+.navbar ul li a:hover, .signInLink:hover {
+  color: var(--link-hover-color);
+}
+
+.authSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userEmail {
+  color: var(--button-text-color);
+  font-size: 0.9rem;
+}

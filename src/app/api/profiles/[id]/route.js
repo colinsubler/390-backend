@@ -1,11 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import { put } from '@vercel/blob';
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// GET single profile by ID
 export async function GET(request, { params }) {
   try {
     const { id } = await params;
@@ -30,6 +29,7 @@ export async function GET(request, { params }) {
   }
 }
 
+// PUT - Update profile by ID
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;
@@ -47,6 +47,7 @@ export async function PUT(request, { params }) {
     const imgFile = formData.get('img');
     const existingImageUrl = formData.get('image_url');
 
+    // Validate required fields
     if (!name || name.trim() === '') {
       return Response.json({ error: 'Name is required' }, { status: 400 });
     }
@@ -62,6 +63,7 @@ export async function PUT(request, { params }) {
 
     let imageUrl = existingImageUrl;
 
+    // If new image uploaded, upload to Vercel Blob
     if (imgFile && imgFile.size > 0) {
       if (imgFile.size > 1024 * 1024) {
         return Response.json({ error: 'Image must be less than 1MB' }, { status: 400 });
@@ -74,6 +76,7 @@ export async function PUT(request, { params }) {
       imageUrl = blob.url;
     }
 
+    // Update profile in database
     const updated = await prisma.profiles.update({
       where: { id: profileId },
       data: {
@@ -100,6 +103,7 @@ export async function PUT(request, { params }) {
   }
 }
 
+// DELETE profile by ID
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;

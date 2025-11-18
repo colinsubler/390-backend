@@ -1,12 +1,8 @@
-import { PrismaClient } from '@prisma/client'
 import { put } from '@vercel/blob'
-
-const prisma = new PrismaClient()
-
+import prisma from "@/lib/prisma";
 // Ensure this route runs on the Node.js runtime (not Edge),
 // so Prisma can use a direct database connection (postgresql://)
 export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
 
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
@@ -54,14 +50,9 @@ export async function POST(request) {
       return Response.json({ error: "Image is required and must be less than 1MB" }, { status: 400 });
     }
 
-    // Upload image to Vercel Blob (requires BLOB_READ_WRITE_TOKEN)
-    const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
-    if (!blobToken) {
-      return Response.json({ error: "Blob storage token not configured (BLOB_READ_WRITE_TOKEN)" }, { status: 500 });
-    }
+
     const blob = await put(imgFile.name, imgFile, {
       access: 'public',
-      token: blobToken,
     });
 
     // Save profile to database with Blob URL

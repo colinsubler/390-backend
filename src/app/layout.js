@@ -3,6 +3,7 @@ import "./styles/reset.css";
 import "./styles/variables.css";
 import "./styles/global.css";
 import Navbar from "@/components/Navbar";
+import SessionProvider from "@/components/SessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,14 +33,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar />
-        <main>
-          <div className="section">
-            <div className="container">
-              {children}
+        <SessionProvider>
+          <Navbar />
+          <main>
+            <div className="section">
+              <div className="container">
+                {children}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );
