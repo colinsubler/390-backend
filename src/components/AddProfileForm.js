@@ -38,7 +38,7 @@ const AddProfileForm = ({ initialData = {} }) => {
       const file = files[0];
       if (file && file.size < 1024 * 1024) {
         // 1MB limit
-        setValues((prev) => ({ ...prev, img: files[0] }));
+        setValues((prev) => ({ ...prev, img: file }));
       } else {
         setErrors("Image size should be less than 1MB");
       }
@@ -60,6 +60,7 @@ const AddProfileForm = ({ initialData = {} }) => {
       formData.append("email", stripTags(trimCollapse(email)));
       formData.append("bio", stripTags(bio).trim());
       
+      // If new image uploaded, use it; otherwise keep existing
       if (img) {
         formData.append("img", img);
       } else if (isEditMode && existingImageUrl) {
@@ -91,6 +92,7 @@ const AddProfileForm = ({ initialData = {} }) => {
         });
       }
 
+      // Reset file input
       const fileInput = document.getElementById("img");
       if (fileInput) fileInput.value = "";
 
@@ -167,7 +169,7 @@ const AddProfileForm = ({ initialData = {} }) => {
               !stripTags(trimCollapse(title)) ||
               !stripTags(trimCollapse(email)) ||
               !stripTags(bio).trim() ||
-              (!img && !isEditMode)
+              (!img && !isEditMode) // Only require image for new profiles
             }
           >
             {isEditMode ? "Update Profile" : "Add Profile"}
